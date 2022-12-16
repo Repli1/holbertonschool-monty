@@ -1,9 +1,4 @@
 #include "monty.h"
-#include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
 
 int main(int argc, char **argv)
 {
@@ -41,8 +36,7 @@ int main(int argc, char **argv)
 		i++;
 	}
 	lines[count] = NULL;
-	for (i = 0; i < count; i++)
-		printf("%s\n", lines[i]);
+	_matcher(lines);
 	free(dup), free(lines), free(buf);
 	return (0);
 }

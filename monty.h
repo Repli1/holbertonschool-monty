@@ -1,6 +1,14 @@
 #ifndef monty_h
 #define monty_h
 
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stddef.h>
+#include <fcntl.h>
+#include <ctype.h>
+
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
  * @n: integer
@@ -36,4 +44,10 @@ typedef struct estructura_s
 	int n;
 	char **argv;
 } estructura_t;
+
+void (*get_opcode_func(char *s))(stack_t **, unsigned int);
+void _push(stack_t **stack, unsigned int line_number);
+int _matcher(char **argv);
+void _pall(stack_t **stack,__attribute__ ((unused)) unsigned int line_number);
+int _isnumber(char *str);
 #endif
