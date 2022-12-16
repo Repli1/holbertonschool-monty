@@ -2,32 +2,30 @@
 
 int _matcher(char **argv)
 {
-	stack_t **stack = malloc(sizeof(*stack));
+	stack_t *stack = NULL, *aux;
 	int i;
 	char *dup, *token;
 
-	*stack = NULL;
 	for (i = 0; argv[i]; i++)
 	{
 		dup = strdup(argv[i]);
 		if (dup == NULL)
 			return (-1);
 		token = strtok(dup, " \t");
-		get_opcode_func(token)(stack, i + 1);
+		get_opcode_func(token, i + 1)(&stack, i + 1);
 		free(dup);
 	}
-	/*aux = (*stack)->prev;
+	aux = stack;
 	while(aux != NULL)
 	{
-		aux = (*stack)->prev;
-		free(*stack);
-		*stack = aux;
-	}*/
-	free(stack);
+		aux = stack->next;
+		free(stack);
+		stack = aux;
+	}
 	return (0);
 }
 
-void _push(stack_t **stack,__attribute__ ((unused)) unsigned int line_number)
+void _push(stack_t **stack, unsigned int line_number)
 {
 	stack_t *aux, *temp;
 	char *token;
@@ -36,11 +34,19 @@ void _push(stack_t **stack,__attribute__ ((unused)) unsigned int line_number)
 	temp = *stack;
 
 	aux = malloc(sizeof(stack_t));
-	token = strtok(NULL, " \t");
-	if (_isnumber(token) == 0)
-		i = atoi(token);
 	if (aux == NULL)
-		return;
+	{
+		fprintf(stderr, "Error: malloc failed\n");
+		exit(EXIT_FAILURE);
+	}
+	token = strtok(NULL, " \t");
+	if (token && _isnumber(token) == 0)
+		i = atoi(token);
+	else
+	{
+		fprintf(stderr, "L%i: usage: push integer\n", line_number);
+		exit (EXIT_FAILURE);
+	}
 	aux->n = i;
 	aux->next = NULL;
 	if (temp == NULL)
@@ -59,15 +65,20 @@ void _push(stack_t **stack,__attribute__ ((unused)) unsigned int line_number)
 
 void _pall(stack_t **stack, __attribute__ ((unused)) unsigned int line_number)
 {
+	stack_t *aux = *stack;
 
-	while(*stack != NULL)
+	while(aux->next != NULL)
 	{
-		printf("%d\n", (*stack)->n);
-		*stack = (*stack)->next;
+		aux = aux->next;
+	}
+	while(aux != NULL)
+	{
+		printf("%d\n", aux->n);
+		aux = aux->prev;
 	}
 }
 
-void (*get_opcode_func(char *s))(stack_t**, unsigned int)
+void (*get_opcode_func(char *s, unsigned int line_number))(stack_t**, unsigned int)
 {
 	instruction_t opcodes[] = {
 	{"push", _push},
@@ -82,7 +93,8 @@ void (*get_opcode_func(char *s))(stack_t**, unsigned int)
 			return (opcodes[i].f);
 		i++;
 	}
-	return (NULL);
+	fprintf(stderr, "L%i: unknown instruction %s\n", line_number, s);
+	exit (EXIT_FAILURE);
 }
 
 int _isnumber(char *str)

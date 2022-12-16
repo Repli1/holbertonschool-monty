@@ -45,7 +45,7 @@ typedef struct estructura_s
 	char **argv;
 } estructura_t;
 
-void (*get_opcode_func(char *s))(stack_t **, unsigned int);
+void (*get_opcode_func(char *s, unsigned int line_number))(stack_t **, unsigned int);
 void _push(stack_t **stack, unsigned int line_number);
 int _matcher(char **argv);
 void _pall(stack_t **stack,__attribute__ ((unused)) unsigned int line_number);

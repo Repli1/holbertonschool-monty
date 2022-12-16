@@ -9,10 +9,16 @@ int main(int argc, char **argv)
 	if (argc != 2)
 	{
 		free(buf);
-		return (-1);
+		fprintf(stderr,"USAGE: monty file\n");
+		exit (EXIT_FAILURE);
 	}
 	memset(buf, '\0', 1024);
 	fd = open(argv[1], O_RDONLY);
+	if (fd == -1)
+	{
+		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
+		exit (EXIT_FAILURE);
+	}
 	r = read(fd, buf, bufsize);
 	if (r == -1)
 	{
