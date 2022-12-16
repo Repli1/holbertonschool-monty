@@ -67,14 +67,17 @@ void _pall(stack_t **stack, __attribute__ ((unused)) unsigned int line_number)
 {
 	stack_t *aux = *stack;
 
-	while(aux->next != NULL)
+	if (aux)
 	{
-		aux = aux->next;
-	}
-	while(aux != NULL)
-	{
-		printf("%d\n", aux->n);
-		aux = aux->prev;
+		while(aux->next != NULL)
+		{
+			aux = aux->next;
+		}
+		while(aux != NULL)
+		{
+			printf("%d\n", aux->n);
+			aux = aux->prev;
+		}
 	}
 }
 
@@ -99,9 +102,11 @@ void (*get_opcode_func(char *s, unsigned int line_number))(stack_t**, unsigned i
 
 int _isnumber(char *str)
 {
-	int i;
+	int i = 0;
 
-	for (i = 0; str[i] != '\0'; i++)
+	if (str[i] == '-')
+		i++;
+	for (; str[i] != '\0'; i++)
 	{
 		if (isdigit(str[i]) == 0)
 			return (-1);
