@@ -3,8 +3,9 @@
 int main(int argc, char **argv)
 {
 	size_t bufsize = 1024;
-	char *buf = malloc(sizeof(char) * 1024), **lines = NULL, *dup = NULL, *token = NULL;
-	int fd, r, i = 0, count = 0;
+	char *buf = malloc(sizeof(char) * 1024), **lines = NULL, *dup = NULL;
+	int i = 0, count = 0, f;
+	FILE *fd, *r;
 
 	if (argc != 2)
 	{
@@ -13,14 +14,14 @@ int main(int argc, char **argv)
 		exit (EXIT_FAILURE);
 	}
 	memset(buf, '\0', 1024);
-	fd = open(argv[1], O_RDONLY);
+	fd = fopen(argv[1], "r");
 	if (fd == -1)
 	{
 		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
 		exit (EXIT_FAILURE);
 	}
-	r = read(fd, buf, bufsize);
-	if (r == -1)
+	fread(r, &buf, &bufsize, fd);
+	if (*r == -1)
 	{
 		free(buf);
 		return (-1);
@@ -33,12 +34,11 @@ int main(int argc, char **argv)
 			count++;
 	}
 	i = 0;
-	token = strtok(dup, "\n");
 	lines = malloc(sizeof(char *) * (count + 1));
-	while (token)
+	while (f != -1)
 	{
-		lines[i] = token;
-		token = strtok(NULL, "\n");
+		f = getline(&buf, &bufsize, fd);
+		lines[i] = buf;
 		i++;
 	}
 	lines[count] = NULL;
