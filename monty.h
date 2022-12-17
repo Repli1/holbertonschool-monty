@@ -45,4 +45,6 @@ void _push(stack_t **, unsigned int);
 int _matcher(char **);
 void _pall(stack_t **stack, __attribute__ ((unused)) unsigned int);
 int _isnumber(char *);
+void _swap(stack_t **, unsigned int);
+void _pint(stack_t **, unsigned int);
 #endif

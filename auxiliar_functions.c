@@ -107,6 +107,8 @@ void (*get_opcode_func(char *s, unsigned int line_n))(stack_t**, unsigned int)
 	instruction_t opcodes[] = {
 	{"push", _push},
 	{"pall", _pall},
+	{"swap", _swap},
+	{"pint", _pint},	
 	{NULL, NULL}
 	};
 	int i = 0;
