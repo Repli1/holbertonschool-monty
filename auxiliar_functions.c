@@ -5,13 +5,16 @@ int _matcher(char **argv)
 	stack_t *stack = NULL, *aux;
 	int i;
 	char *dup, *token;
-
+	for (i = 0; argv[i]; i++)
+		printf ("%s\n", argv[i]);
 	for (i = 0; argv[i]; i++)
 	{
 		dup = strdup(argv[i]);
 		if (dup == NULL)
 			return (-1);
-		token = strtok(dup, " \t");
+		printf("argv -> %s\n", argv[i]);
+		token = strtok(dup, " \n\t");
+		printf("tok:%s\n", token);
 		get_opcode_func(token, i + 1)(&stack, i + 1);
 		free(dup);
 	}
@@ -39,7 +42,7 @@ void _push(stack_t **stack, unsigned int line_number)
 		fprintf(stderr, "Error: malloc failed\n");
 		exit(EXIT_FAILURE);
 	}
-	token = strtok(NULL, " \t");
+	token = strtok(NULL, " \n\t");
 	if (token && _isnumber(token) == 0)
 		i = atoi(token);
 	else
@@ -96,6 +99,7 @@ void (*get_opcode_func(char *s, unsigned int line_number))(stack_t**, unsigned i
 			return (opcodes[i].f);
 		i++;
 	}
+
 	fprintf(stderr, "L%i: unknown instruction %s\n", line_number, s);
 	exit (EXIT_FAILURE);
 }
