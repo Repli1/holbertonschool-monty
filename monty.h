@@ -1,5 +1,5 @@
-#ifndef monty_h
-#define monty_h
+#ifndef MONTY_H
+#define MONTY_H
 
 #include <string.h>
 #include <stdlib.h>
@@ -39,15 +39,10 @@ typedef struct instruction_s
 	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-typedef struct estructura_s
-{
-	int n;
-	char **argv;
-} estructura_t;
 
-void (*get_opcode_func(char *s, unsigned int line_number))(stack_t **, unsigned int);
-void _push(stack_t **stack, unsigned int line_number);
-int _matcher(char **argv);
-void _pall(stack_t **stack,__attribute__ ((unused)) unsigned int line_number);
-int _isnumber(char *str);
+void (*get_opcode_func(char *, unsigned int))(stack_t **, unsigned int);
+void _push(stack_t **, unsigned int);
+int _matcher(char **);
+void _pall(stack_t **stack, __attribute__ ((unused)) unsigned int);
+int _isnumber(char *);
 #endif

@@ -1,25 +1,28 @@
 #include "monty.h"
+/**
+ * _matcher - tokenizes lines and sends them to get_opcode_func
+ * @argv: array of lines to tokenize
+ * Return: (0)
+ */
 
 int _matcher(char **argv)
 {
 	stack_t *stack = NULL, *aux;
 	int i;
 	char *dup, *token;
-	for (i = 0; argv[i]; i++)
-		printf ("%s\n", argv[i]);
+
 	for (i = 0; argv[i]; i++)
 	{
 		dup = strdup(argv[i]);
 		if (dup == NULL)
 			return (-1);
-		printf("argv -> %s\n", argv[i]);
 		token = strtok(dup, " \n\t");
-		printf("tok:%s\n", token);
-		get_opcode_func(token, i + 1)(&stack, i + 1);
+		if (token)
+			get_opcode_func(token, i + 1)(&stack, i + 1);
 		free(dup);
 	}
 	aux = stack;
-	while(aux != NULL)
+	while (aux != NULL)
 	{
 		aux = stack->next;
 		free(stack);
@@ -28,6 +31,11 @@ int _matcher(char **argv)
 	return (0);
 }
 
+/**
+ * _push - pushes an element to the stack
+ * @stack: pointer to doubly linked list
+ * @line_number: line number
+ */
 void _push(stack_t **stack, unsigned int line_number)
 {
 	stack_t *aux, *temp;
@@ -47,8 +55,9 @@ void _push(stack_t **stack, unsigned int line_number)
 		i = atoi(token);
 	else
 	{
+		free(aux);
 		fprintf(stderr, "L%i: usage: push integer\n", line_number);
-		exit (EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	aux->n = i;
 	aux->next = NULL;
@@ -66,17 +75,20 @@ void _push(stack_t **stack, unsigned int line_number)
 	}
 }
 
+/**
+ * _pall - prints all the elements in the stack
+ * @stack: pointer to doubly linked list
+ * @line_number: line number
+ */
 void _pall(stack_t **stack, __attribute__ ((unused)) unsigned int line_number)
 {
 	stack_t *aux = *stack;
 
 	if (aux)
 	{
-		while(aux->next != NULL)
-		{
+		while (aux->next != NULL)
 			aux = aux->next;
-		}
-		while(aux != NULL)
+		while (aux != NULL)
 		{
 			printf("%d\n", aux->n);
 			aux = aux->prev;
@@ -84,7 +96,13 @@ void _pall(stack_t **stack, __attribute__ ((unused)) unsigned int line_number)
 	}
 }
 
-void (*get_opcode_func(char *s, unsigned int line_number))(stack_t**, unsigned int)
+/**
+ * get_opcode_func - compares a string to an opcode
+ * @s: string to compare
+ * @line_n: line number
+ * Return: the corresponding function if succeds, (EXIT_FAILURE) if it fails
+ */
+void (*get_opcode_func(char *s, unsigned int line_n))(stack_t**, unsigned int)
 {
 	instruction_t opcodes[] = {
 	{"push", _push},
@@ -100,10 +118,15 @@ void (*get_opcode_func(char *s, unsigned int line_number))(stack_t**, unsigned i
 		i++;
 	}
 
-	fprintf(stderr, "L%i: unknown instruction %s\n", line_number, s);
-	exit (EXIT_FAILURE);
+	fprintf(stderr, "L%i: unknown instruction %s\n", line_n, s);
+	exit(EXIT_FAILURE);
 }
 
+/**
+ * _isnumber - checks if the stirng is a number
+ * @str: string to check
+ * Return: (0) if succed, (-1) if it fails
+ */
 int _isnumber(char *str)
 {
 	int i = 0;

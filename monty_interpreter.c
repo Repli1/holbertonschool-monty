@@ -1,5 +1,12 @@
 #include "monty.h"
 
+/**
+ * main - monty_interpreter
+ * @argc: number of args
+ * @argv: pointer to a string of args
+ * Return: (0) if succed, EXIT_FAILURE if it fails
+ */
+
 int main(int argc, char **argv)
 {
 	size_t bufsize = 1024;
@@ -7,57 +14,35 @@ int main(int argc, char **argv)
 	int i = 0, count = 0;
 	FILE *fd;
 
-
 	if (argc != 2)
 	{
 		free(buf);
-		fprintf(stderr,"USAGE: monty file\n");
-		exit (EXIT_FAILURE);
+		fprintf(stderr, "USAGE: monty file\n");
+		exit(EXIT_FAILURE);
 	}
 	memset(buf, '\0', 1024);
-	
-
 	fd = fopen(argv[1], "r");
-
 	if (fd == NULL)
 	{
-		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
-		exit (EXIT_FAILURE);
-	}
-/*	fread(r, &buf, &bufsize, fd);
-	if (*r == -1)
-	{
 		free(buf);
-		return (-1);
-	} */
-	while (getline(&buf, &bufsize, fd) != EOF)
-			count++;
-	fclose(fd);
-/*	dup = malloc(sizeof(char) * (r + 1));
-	strcpy(dup, buf);
-	for (i = 0; dup[i] != '\0'; i++)
-	{
-		if (dup[i] == '\n')
-			count++;
+		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
+		exit(EXIT_FAILURE);
 	}
-	i = 0;*/
+	while (getline(&buf, &bufsize, fd) != EOF)
+		count++;
+	fclose(fd);
 	lines = malloc(sizeof(char *) * (count + 1));
-
 	fd = fopen(argv[1], "r");
-
 	while (getline(&buf, &bufsize, fd) != EOF)
 	{
-		lines[i] = buf;
-//		printf("lines[%d] -> %s\n", i, lines[i]);
+		lines[i] = malloc(sizeof(char) * strlen(buf) + 1);
+		strcpy(lines[i], buf);
 		i++;
 	}
-
 	lines[count] = NULL;
-	for (i = 0; lines[i]; i++)
-		printf ("%s\n", lines[i]);
-
 	_matcher(lines);
-	free(lines), free(buf);
-	fclose(fd);
+	for (i = 0; lines[i]; i++)
+		free(lines[i]);
+	free(lines), free(buf), fclose(fd);
 	return (0);
 }
