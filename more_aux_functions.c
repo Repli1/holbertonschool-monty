@@ -70,9 +70,13 @@ void _pop(stack_t **stack, unsigned int line_number)
 	{
 		while (temp->next)
 			temp = temp->next;
-		temp->prev->next = NULL;
-		temp = NULL;
-		free(temp);
+		if (temp->prev)
+		{
+			temp->prev->next = NULL;
+			free(temp);
+		}
+		else
+			temp = NULL;
 	}
 }
 /**
