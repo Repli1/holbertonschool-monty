@@ -108,7 +108,10 @@ void (*get_opcode_func(char *s, unsigned int line_n))(stack_t**, unsigned int)
 	{"push", _push},
 	{"pall", _pall},
 	{"swap", _swap},
-	{"pint", _pint},	
+	{"pint", _pint},
+	{"pop", _pop},
+	{"add", _add},
+	{"nop", _nop},
 	{NULL, NULL}
 	};
 	int i = 0;
