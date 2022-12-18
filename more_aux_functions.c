@@ -76,7 +76,11 @@ void _pop(stack_t **stack, unsigned int line_number)
 			free(temp);
 		}
 		else
-			temp = NULL;
+		{
+			free(*stack);
+			*stack = NULL;
+			free(*stack);
+		}
 	}
 }
 /**
